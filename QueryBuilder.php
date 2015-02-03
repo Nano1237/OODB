@@ -11,13 +11,32 @@ namespace RASTER;
 
 class QueryBuilder {
 
+    /**
+     * The current database connection
+     * @var \mysqli
+     */
     private $db;
+
+    /**
+     * The until now build query saved as string.
+     * @var string
+     */
     private $query = '';
-    //
-    private $insert_data;
-    //
-    private $blocker_from = false;
+
+    /**
+     * select,insert,update,delete,and so on.
+     * Currently just used as check if one of this query methods is already called.
+     * Later maybe used for syntax differences between methods
+     * @var integer
+     */
     private $query_type; //select,insert,update,delete,and so on
+
+    /**
+     * 
+     * sets the mysqli object as property for the object.
+     * Note: It requires a database connection for the mysqli_real_escape_string() Function
+     * @param \mysqli $db
+     */
 
     public function __construct(\mysqli $db) {
         $this->db = $db;
@@ -129,23 +148,40 @@ class QueryBuilder {
         return $this;
     }
 
-    public function from($table) {
-        $this->query = $this->appendSpace($this->query) . 'FROM `' . $table . '`';
+    /**
+     * 
+     * Builds the .. FROM `table` ... part of the query.
+     * @param string $tableName the name of the database table
+     * @return \RASTER\QueryBuilder Returns itself for the next query part
+     */
+    public function from($tableName) {
+        $this->query = $this->appendSpace($this->query) . 'FROM `' . $tableName . '`';
         return $this;
     }
 
-    public function set($setData = null) {
-        if ($setData === null) {
-            $setData = $this->insert_data;
-        }
+    /**
+     * 
+     * Builds the ... SET `key`="value", ... Part of the query.
+     * @param array $data the data that should be set into the database table
+     * @return \RASTER\QueryBuilder Returns itself for the next query part
+     */
+    public function set($data) {
         $_comma = array();
-        foreach ($this->real_escape_array($setData) as $key => $value) {
+        foreach ($this->real_escape_array($data) as $key => $value) {
             array_push($_comma, '`' . $key . '`="' . $value . '"');
         }
         $this->query = $this->appendSpace($this->query) . 'SET ' . implode(',', $_comma);
         return $this;
     }
 
+    /**
+     * 
+     * Builds the ... WHERE `key`="value" AND ... Part of the query.
+     * All arguments has to be arrays, the arguments in each array are seperated by AND.
+     * The different arguments are seperatet by OR.
+     * The amount of arguments is dynamic!
+     * @return \RASTER\QueryBuilder Returns itself for the next query part
+     */
     public function where() {
         $OR = array();
         foreach (func_get_args() as $value) {
