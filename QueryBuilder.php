@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Description
+ * 
+ * This Project was part of the RASTER Project. Thats why it has the RASTER Namespace.
+ * You can remove this namespace if you like.
+ * 
+ * @todo Get the type of the value and dont set the "" by NULL,Int and so on.
+ * @todo support types of data in where and set and so on (int,string,email,...)
  * @author Tim Rücker <tim.ruecker@ymail.com>
  * @copyright (c) 2015
  * 
