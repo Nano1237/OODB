@@ -2,8 +2,8 @@
 
 /**
  * Description
- * @author Tim Rücker <tim.ruecker@mcbring.de>
- * @copyright (c) 2014, mcbring.de
+ * @author Tim Rücker <tim.ruecker@ymail.com>
+ * @copyright (c) 2015
  * 
  */
 
